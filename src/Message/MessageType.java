@@ -1,0 +1,5 @@
+package Message;
+
+public enum MessageType {
+    CREATE, LOGIN, CHAT, VOICECHAT, LOGIN_SUCCEED, LOGIN_FAILED, ACCOUNT_CREATED, ACCOUNT_FAILED;
+}
