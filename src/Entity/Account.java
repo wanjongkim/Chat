@@ -16,7 +16,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "Account.findAll", query = "SELECT a FROM Account a")
     , @NamedQuery(name = "Account.findById", query = "SELECT a FROM Account a WHERE a.accountPK.id = :id")
-    , @NamedQuery(name = "Account.findByUsername", query = "SELECT a FROM Account a WHERE a.accountPK.username = :username")})
+    , @NamedQuery(name = "Account.findByUsername", query = "SELECT a FROM Account a WHERE a.accountPK.username = :username")
+    , @NamedQuery(name = "Account.findAccount", query = "SELECT a FROM Account a WHERE a.accountPK.username = :username AND a.password = :password")
+})
 public class Account implements Serializable {
 
     private static final long serialVersionUID = 1L;

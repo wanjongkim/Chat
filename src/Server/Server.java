@@ -19,7 +19,7 @@ public class Server implements Runnable {
     private final ServerController controller;
     private ServerSocket server;
     private final DBConnection db;
-    private final int port  = 9090;
+    private final int port  = 25560;
     private boolean running;
     
     public Server(ServerController controller) {
@@ -38,7 +38,10 @@ public class Server implements Runnable {
         }
         while(running) {
             try {
+                System.out.println("Waiting for connection");
                 Socket client = server.accept();
+                
+                System.out.println("New connection");
                 ClientConnection connection = new ClientConnection(client, db);
                 executor.submit(connection);
             } catch (IOException ex) {
@@ -51,6 +54,10 @@ public class Server implements Runnable {
         ServerTask serverTask = new ServerTask(username, password);
         Thread taskThread = new Thread(serverTask);
         taskThread.start();
+    }
+    
+    public void shutdown() {
+        
     }
     
     private class ServerTask extends Task {
@@ -74,6 +81,7 @@ public class Server implements Runnable {
         protected void succeeded() {
             if(connected) {  
                 controller.setStatus("Sever is running");
+                controller.runServer();
             }
             else {
                 controller.setServerRunning(false);

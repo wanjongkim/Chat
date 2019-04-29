@@ -48,6 +48,10 @@ public class DBConnection {
         }
     }
     
+    public boolean login(String username, String password) {
+        return accountController.login(username, password);
+    }
+    
     private EntityManagerFactory getEntityManagerFactory(String username, String password) {
         return Persistence.createEntityManagerFactory( persistenceName,
             getProperties(username, password) );

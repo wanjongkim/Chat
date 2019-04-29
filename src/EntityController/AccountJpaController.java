@@ -124,6 +124,22 @@ public class AccountJpaController implements Serializable {
             em.close();
         }
     }
+    
+    public boolean login(String username, String password) {
+        EntityManager em = getEntityManager();
+        try {
+            Query query = em.createNamedQuery("Account.findAccount");
+            query.setParameter("username", username);
+            query.setParameter("password", password);
+            List account = query.getResultList();
+            if(!account.isEmpty()) {
+                return true;
+            }
+        } finally {
+            em.close();
+        }
+        return false;
+    }
 
     public int getAccountCount() {
         EntityManager em = getEntityManager();
