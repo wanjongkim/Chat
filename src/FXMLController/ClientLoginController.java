@@ -82,11 +82,40 @@ public class ClientLoginController implements Initializable {
     }
     
     public void loginSucceeded() {
-        System.out.println("Login Succeeded");
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/MainClient.fxml"));
+        Parent root;
+        try {
+            root = loader.load();
+            MainClientController controller = loader.getController();
+            if(client == null)
+                client = new Client(this);
+            controller.setClient(client);
+            client.setMainClientController(controller);
+            closeWindow();
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    Scene scene = new Scene(root);
+                    Stage stage = new Stage();
+                    stage.setScene(scene);
+                    stage.show();
+                }
+            });
+            Thread clientThread = new Thread(client);
+            clientThread.start();
+        } catch (IOException ex) {
+            Logger.getLogger(ClientLoginController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     private void closeWindow() {
-        
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                Stage stage = (Stage) username.getScene().getWindow();
+                stage.close();
+            }
+        });
     }
     
 }

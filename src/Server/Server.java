@@ -4,7 +4,9 @@ import FXMLController.ServerController;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -40,7 +42,6 @@ public class Server implements Runnable {
             try {
                 System.out.println("Waiting for connection");
                 Socket client = server.accept();
-                
                 System.out.println("New connection");
                 ClientConnection connection = new ClientConnection(client, db);
                 executor.submit(connection);

@@ -19,7 +19,6 @@ public class ClientRegister {
         message.setUsername(username);
         message.setPassword(password);
         client.writeMessage(message);
-        System.out.println("Test");
         Message serverMessage = client.readMessage();
         if(serverMessage.getType() == MessageType.ACCOUNT_FAILED) {
             controller.setStatus("Failed to create account");

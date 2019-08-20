@@ -4,16 +4,10 @@ import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 
 @Embeddable
 public class AccountPK implements Serializable {
 
-    @Basic(optional = false)
-    @Column(name = "ID")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
     @Basic(optional = false)
     @Column(name = "Username")
     private String username;
@@ -23,14 +17,6 @@ public class AccountPK implements Serializable {
 
     public AccountPK(String username) {
         this.username = username;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getUsername() {
@@ -44,7 +30,6 @@ public class AccountPK implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (int) id;
         hash += (username != null ? username.hashCode() : 0);
         return hash;
     }
@@ -55,9 +40,6 @@ public class AccountPK implements Serializable {
             return false;
         }
         AccountPK other = (AccountPK) object;
-        if (this.id != other.id) {
-            return false;
-        }
         if ((this.username == null && other.username != null) || (this.username != null && !this.username.equals(other.username))) {
             return false;
         }
@@ -66,7 +48,7 @@ public class AccountPK implements Serializable {
 
     @Override
     public String toString() {
-        return "chat.AccountPK[ id=" + id + ", username=" + username + " ]";
+        return "username=" + username;
     }
     
 }

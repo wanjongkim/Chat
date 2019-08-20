@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="FXMLController.MainClientController">
+   <children>
+      <TextArea fx:id="serverChat" editable="false" prefHeight="346.0" prefWidth="475.0" />
+      <TextArea fx:id="userChat" layoutY="346.0" prefHeight="54.0" prefWidth="475.0" promptText="Type something..." />
+      <ScrollPane fx:id="usersList" layoutX="474.0" prefHeight="400.0" prefWidth="126.0" AnchorPane.rightAnchor="0.0">
+         <content>
+            <VBox fx:id="usersBox" prefHeight="400.0" prefWidth="126.0" />
+         </content>
+      </ScrollPane>
+   </children>
+</AnchorPane>

@@ -1,6 +1,7 @@
 package Message;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class Message implements Serializable {
     
@@ -8,6 +9,7 @@ public class Message implements Serializable {
     private String message;
     private String username;
     private String password;
+    private List usernamesList;
     
     public Message(MessageType type) {
         this.type = type;
@@ -39,5 +41,13 @@ public class Message implements Serializable {
     
     public MessageType getType() {
         return type;
+    }
+    
+    public List getUsernamesList() {
+        return usernamesList;
+    }
+
+    public void setUsernamesList(List usernamesList) {
+        this.usernamesList = usernamesList;
     }
 }
