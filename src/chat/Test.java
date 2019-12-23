@@ -29,7 +29,7 @@ public class Test {
     byte[] soundData;
     byte[] incomingSoundData;
     Socket socket;
-    String address = "192.168.0.14"; //change to localhost later
+    String address = "localhost"; //change to localhost later
     int port = 25560;
     private ObjectOutputStream oos;
     private ObjectInputStream ois;
