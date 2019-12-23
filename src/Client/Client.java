@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 public class Client implements Runnable {
     
     private Socket socket;
-    private final String address = "localhost";
+    private final String address = "localhost"; //change to localhost later
     private final int port = 25560;
     private final ClientLoginController loginController;
     private ObjectOutputStream oos;
@@ -22,6 +22,7 @@ public class Client implements Runnable {
     private String username;
     private MainClientController mainClient;
     private boolean running = true;
+    private Call call;
     
     public Client(ClientLoginController loginController) {
         try {
@@ -48,20 +49,72 @@ public class Client implements Runnable {
                 case MEMBERS_LIST:
                     mainClient.addUsersToList(message.getUsernamesList());
                     break;
+                case VOICECHAT:
+                    if(call == null) {
+                        call = new Call(this, message.getUsername());
+                        call.initiate();
+                        Thread thread = new Thread(call);
+                        thread.start();
+                    }
+                    byte[] soundData = new byte[message.getSoundSize()];
+                    readSoundMessage(soundData);
+                    call.setIncomingSoundData(soundData);
+                    break;
                 default:
                     break;
             }
         }
     }
     
+    public void callUser(String username) {
+        if(call == null) {
+            call = new Call(this, username);
+            call.initiate();
+        }
+        else {
+            return;
+        }
+        Thread callThread = new Thread(call);
+        callThread.start();
+    }
+    
     public void writeMessage(Message message) {
         try {
             if(oos == null)
                 oos = new ObjectOutputStream(socket.getOutputStream());
-            oos.writeObject(message);
+            synchronized(oos) {
+                oos.writeObject(message);
+            }
         } catch (IOException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    public void writeSoundMessage(Message message, byte[] buffer) {
+        try {
+            if(oos == null)
+                oos = new ObjectOutputStream(socket.getOutputStream());
+            synchronized(oos) {
+                oos.writeObject(message);
+                oos.write(buffer, 0, buffer.length);
+                oos.flush();
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public byte[] readSoundMessage(byte[] buffer) {
+        try {
+            if(ois == null)
+                ois = new ObjectInputStream(socket.getInputStream());
+            synchronized(ois) {
+                ois.readFully(buffer, 0, buffer.length);
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+        return buffer;
     }
     
     public Message readMessage() {
@@ -69,7 +122,9 @@ public class Client implements Runnable {
         try {
             if(ois == null)
                 ois = new ObjectInputStream(socket.getInputStream());
-            serverMessage = (Message) ois.readObject();
+            synchronized(ois) {
+                serverMessage = (Message) ois.readObject();
+            }
         } catch (IOException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
@@ -137,7 +192,7 @@ public class Client implements Runnable {
         Message message = new Message(MessageType.CHAT);
         message.setMessage(userMessage);
         writeMessage(message);
-        
+        System.out.println(userMessage);
     }
     
     public String getUsername() {

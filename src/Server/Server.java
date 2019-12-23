@@ -21,8 +21,9 @@ public class Server implements Runnable {
     private final ServerController controller;
     private ServerSocket server;
     private final DBConnection db;
-    private final int port  = 25560;
+    private final int port = 25560;
     private boolean running;
+    private final int threadsSupported = 10;
     
     public Server(ServerController controller) {
         this.controller = controller;
@@ -31,7 +32,7 @@ public class Server implements Runnable {
     
     @Override
     public void run() {
-        ExecutorService executor = Executors.newFixedThreadPool(10);
+        ExecutorService executor = Executors.newFixedThreadPool(threadsSupported);
         running = true;
         try {
             server = new ServerSocket(port);

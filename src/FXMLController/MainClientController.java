@@ -17,9 +17,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 
 public class MainClientController implements Initializable {
 
@@ -82,10 +87,32 @@ public class MainClientController implements Initializable {
             public void run() {
                 for(String user : users) {
                     Label username = new Label(user);
+                    if(!username.getText().equalsIgnoreCase(client.getUsername())) {
+                        ContextMenu menu = new ContextMenu();
+                        MenuItem call = new MenuItem("Call");
+                        call.setOnAction(new EventHandler<ActionEvent>(){
+                            @Override
+                            public void handle(ActionEvent event) {
+                                System.out.println("Calling " + username.getText());
+                                callUser(username.getText());
+                            }
+                        });
+                        menu.getItems().add(call);
+                        username.setOnContextMenuRequested(new EventHandler<ContextMenuEvent>() {
+                            @Override
+                            public void handle(ContextMenuEvent event) {
+                                menu.show(username, event.getScreenX(), event.getScreenY());
+                            }                        
+                        });
+                    }
                     usersBox.getChildren().add(username);
                 }
             }
         });
+    }
+    //send an invite first and if the user accepts the call is established
+    public void callUser(String username) {
+        client.callUser(username);
     }
     
     public void setClient(Client client) {
